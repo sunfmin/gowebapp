@@ -1,4 +1,4 @@
-package gowebapp
+package routes
 
 import (
 	"github.com/bmizerany/pat"

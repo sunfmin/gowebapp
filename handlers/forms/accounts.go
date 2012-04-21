@@ -7,17 +7,19 @@ import (
 
 func AccountRegisterForm() (f *goform.Builder) {
 	f = goform.NewFormBuilder()
-	f.TextField("Name")
-	f.Select("Gender").Collection(func(fo goform.FormObject, env Env) goform.Options {
+	f.TextField("Name").Placeholder("Type your name")
+
+	f.RadioButtons("Gender").Collection(func(fo goform.FormObject, env Env) goform.Options {
 		return goform.StringOptions([][]string{
 			{"1", "Men"},
 			{"2", "Women"},
 		})
 	})
-	f.RadioButtons("Gender").Collection(func(fo goform.FormObject, env Env) goform.Options {
+
+	f.Select("Department").Collection(func(fo goform.FormObject, env Env) goform.Options {
 		return goform.StringOptions([][]string{
-			{"1", "Men"},
-			{"2", "Women"},
+			{"HR", "Human Resource"},
+			{"IT", "IT Development"},
 		})
 	})
 	return

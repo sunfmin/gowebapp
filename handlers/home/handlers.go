@@ -9,8 +9,9 @@ import (
 
 func Index(env Env) (status Status, headers Headers, body Body) {
 	a := &accounts.Account{
-		Name:   "Felix",
-		Gender: "2",
+		Name:       "Felix",
+		Gender:     "2",
+		Department: "IT",
 	}
 	mangotemplate.ForRender(env, "home/index", forms.AccountRegisterForm().Render(a, env))
 	return

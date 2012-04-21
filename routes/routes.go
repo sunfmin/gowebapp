@@ -1,19 +1,38 @@
 package routes
 
 import (
-	"github.com/bmizerany/pat"
-	"github.com/sunfmin/gowebapp/accounts"
-	"github.com/sunfmin/gowebapp/home"
-	"github.com/sunfmin/gowebapp/layout"
-	"net/http"
+	"github.com/binku87/pat"
+	. "github.com/paulbellamy/mango"
+	"github.com/sunfmin/gowebapp/handlers/home"
+	"github.com/sunfmin/mangotemplate"
+	"html/template"
 )
 
-func NewMux() (r *pat.PatternServeMux) {
-	m := pat.New()
-	m.Get("/", http.HandlerFunc(layout.MainLayout(home.Index)))
-	m.Get("/accounts", http.HandlerFunc(layout.MainLayout(accounts.Index)))
-	m.Get("/accounts/:id/edit", http.HandlerFunc(layout.MainLayout(accounts.Edit)))
-	m.Get("/accounts/:id/popup_edit", http.HandlerFunc(layout.SimpleLayout(accounts.Edit)))
+type LayoutData struct {
+	Name string
+}
 
+type provider struct{}
+
+func (h *provider) LayoutData(env Env) (d interface{}) {
+	d = &LayoutData{}
+	return
+}
+
+func NewMux() (r *pat.PatternServeMux) {
+
+	tpl, err := template.ParseGlob("templates/*/*.html")
+	if err != nil {
+		panic(err)
+	}
+
+	layout := mangotemplate.MakeLayout(tpl, "main", &provider{})
+	renderer := mangotemplate.MakeRenderer(tpl)
+
+	s := new(Stack)
+	s.Middleware(layout, renderer)
+
+	m := pat.New()
+	m.Get("/", s.HandlerFunc(home.Index))
 	return m
 }
